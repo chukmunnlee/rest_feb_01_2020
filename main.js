@@ -86,8 +86,21 @@ app.post(
 app.use(
     (req, resp) => {
         resp.status(404)
-        resp.type('application/json')
-        resp.json({ message: `resource not found: ${req.originalUrl}`})
+        resp.format({
+            'text/html': () => {
+                resp.type('text/html')
+                resp.send('<h2>Not found</h2>')
+            },
+            'application/json': () => {
+                resp.type('application/json')
+                resp.json({ message: `resource not found: ${req.originalUrl}`})
+            },
+            'default': () => {
+                resp.type('text/plain')
+                resp.send('cannot process your request')
+
+            }
+        })
     }
 )
 
